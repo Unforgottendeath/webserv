@@ -1,4 +1,4 @@
-#include "../includes/webserv.hpp"
+#include "../includes/libft.h"
 
 ssize_t /* Write "n" bytes to a descriptor. */
 writen(int fd, const void *vptr, size_t n)
@@ -7,7 +7,7 @@ writen(int fd, const void *vptr, size_t n)
 	ssize_t		nwritten;
 	const char	*ptr;
 
-	ptr = static_cast<const char *>(vptr);
+	ptr = vptr;
 	nleft = n;
 	while (nleft > 0)
 	{

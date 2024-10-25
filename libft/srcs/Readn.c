@@ -1,4 +1,4 @@
-#include "../includes/webserv.hpp"
+#include "../includes/libft.h"
 
 ssize_t /* Read "n" bytes from a descriptor. */
 readn(int fd, void *vptr, size_t n)
@@ -7,7 +7,7 @@ readn(int fd, void *vptr, size_t n)
 	ssize_t	nread;
 	char	*ptr;
 
-	ptr = static_cast<char *>(vptr);
+	ptr = vptr;
 	nleft = n;
 	while (nleft > 0)
 	{
