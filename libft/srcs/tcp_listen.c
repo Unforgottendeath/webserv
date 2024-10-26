@@ -1,6 +1,8 @@
-#include "../includes/libft.h"
+/* include tcp_listen */
+#include	"unp.h"
 
-int tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)
+int
+tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)
 {
 	int				listenfd, n;
 	const int		on = 1;
@@ -40,6 +42,13 @@ int tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)
 
 	return(listenfd);
 }
+/* end tcp_listen */
+
+/*
+ * We place the wrapper function here, not in wraplib.c, because some
+ * XTI programs need to include wraplib.c, and it also defines
+ * a Tcp_listen() function.
+ */
 
 int
 Tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)
