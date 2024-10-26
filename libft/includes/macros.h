@@ -61,9 +61,9 @@ struct unp_in_pktinfo {
 #define	CMSG_SPACE(size)	(sizeof(struct cmsghdr) + (size))
 #endif
 
-/* POSIX requires the SUN_LEN() macro, but not all implementations DefinE
-   it (yet).  Note that this 4.4BSD macro works regardless whether there is
-   a length field or not. */
+// /* POSIX requires the SUN_LEN() macro, but not all implementations DefinE
+//    it (yet).  Note that this 4.4BSD macro works regardless whether there is
+//    a length field or not. */
 #ifndef	SUN_LEN
 # define	SUN_LEN(su) \
 	(sizeof(*(su)) - sizeof((su)->sun_path) + strlen((su)->sun_path))

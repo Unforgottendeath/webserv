@@ -17,6 +17,8 @@
 
 #include	<netinet/in.h>	/* sockaddr_in{} and other Internet defns */
 #include	<arpa/inet.h>	/* inet(3) functions */
+#include	<stdarg.h>		/* ANSI C header file */
+#include	<syslog.h>		/* for syslog() */
 #include	<errno.h>
 #include	<fcntl.h>		/* for nonblocking */
 #include	<netdb.h>

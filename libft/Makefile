@@ -1,259 +1,86 @@
-NAME            = libft.a
+NAME         = libft.a
 
-CC              = cc
-FLAGS           = -Wall -Wextra -Werror
-RM              = rm -rf
+CC           = cc
+CFLAGS       = -Wall -Wextra -Werror -O3
+RM           = rm -rf
 
-OBJDIR          = .objFiles
+OBJDIR       = .objFiles
 
-SRCDIR          = ./srcs
-INCDIR          = ./includes
+SRCDIR       = ./srcs
+INCDIR       = ./includes
 
-SRCFILES        = tcp_listen wrapsock wrapunix Writen Readn error Readline
-HEADERFILES     = includes libft macros prototypes addrinfo
+SRCFILES     = Readline Readn Writen connect_nonb connect_timeo daemon_inetd daemon_init dg_cli dg_echo error family_to_level gf_time host_serv hstrerror if_indextoname if_nameindex if_nametoindex in6addr_any mcast_get_if mcast_get_loop mcast_get_ttl mcast_join mcast_leave mcast_set_if mcast_set_loop mcast_set_ttl my_addrs pselect read_fd readable_timeo rtt signal signal_intr snprintf sock_bind_wild sock_cmp_addr sock_cmp_port sock_get_port sock_ntop sock_ntop_host sock_set_addr sock_set_port sock_set_wild sockatmark sockfd_to_family str_cli str_echo tcp_connect tcp_listen tv_sub udp_client udp_connect udp_server wraplib wrappthread wrapsock wrapstdio wrapunix writable_timeo write_fd 
 
-SRC             = $(addprefix $(SRCDIR)/, $(SRCFILES:=.c))
-OBJ             = $(addprefix $(OBJDIR)/, $(SRCFILES:=.o))
-HEADER          = $(addprefix $(INCDIR)/, $(HEADERFILES:=.h))
+HEADERFILES  = includes macros prototypes libft rtt
 
-# Debug 
+SRC          = $(addprefix $(SRCDIR)/, $(SRCFILES:=.c))
+OBJ          = $(addprefix $(OBJDIR)/, $(SRCFILES:=.o))
+HEADER       = $(addprefix $(INCDIR)/, $(HEADERFILES:=.h))
+
+# Debug
 ifeq ($(DEBUG), 1)
    OPTS = -g
 else
    OPTS =
 endif
 
-# Function to check for feature availability
-check_feature = \
-    (echo '\#include <$(1)>' | $(CC) -E - 2>/dev/null | grep -q '$(2)')
-
-# Check for sockaddr
-ifeq ($(shell $(check_feature sys/socket.h sockaddr)),)
-CFLAGS += -DHAVE_SYS_SOCKET_H
-endif
-
-# Check for sockaddrin
-ifeq ($(shell $(check_feature netinet/in.h sockaddr_in)),)
-CFLAGS += -DHAVE_NETINET_IN_H
-endif
-
-# Check for pollfd
-ifeq ($(shell $(check_feature poll.h pollfd)),) 
-CFLAGS += -DHAVE_POLL_H
-endif
-
-# Check for fd_set
-ifeq ($(shell $(check_feature sys/select.h fd_set)),)
-CFLAGS += -DHAVE_SYS_SELECT_H
-endif
-
-# Check for timeval and timespec
-ifeq ($(shell $(check_feature sys/time.h timeval)),) && ifeq ($(shell $(check_feature time.h timespec)),)
-CFLAGS += -DTIME_WITH_SYS_TIME
-endif
-
-# Check for timeval
-ifeq ($(shell $(check_feature time.h timespec)),)
-CFLAGS += -DHAVE_SYSTIME_H
-endif
-
-# Check for sysctl
-ifeq ($(shell $(check_feature sys/sysctl.h sysctl)),)
-CFLAGS += -DHAVE_SYS_SYSCTL_H
-endif
-
-# Check for pthreadcreate
-ifeq ($(shell $(check_feature pthread.h pthread_create)),)
-CFLAGS += -DHAVE_PTHREAD_H
-endif
-
-# Check for if_nameindex
-ifeq ($(shell $(check_feature net/if_dl.h if_nameindex)),)
-CFLAGS += -DHAVE_NET_IF_DL_H
-endif
-
-# Check for kevent
-ifeq ($(shell $(check_feature sys/event.h kevent)),)
-CFLAGS += -DHAVE_KQUEUE -DHAVE_SYS_EVENT_H
-endif
-
-# Check for bcmp
-ifeq ($(shell $(check_feature strings.h bcmp)),)
-CFLAGS += -DHAVE_STRINGS_H
-endif
-
-# Check for ioctl
-ifeq ($(shell $(check_feature sys/ioctl.h ioctl)),)
-CFLAGS += -DHAVE_SYS_IOCTL_H
-endif
-
-# Check for sys/param.h and MAXPATHLEN
-ifeq ($(shell $(check_feature sys/param.h MAXPATHLEN)),)
-CFLAGS += -DHAVE_SYS_PARAM_H
-
-# Check for sys/sockio.h and SIOCGIFCONFIG
-ifeq ($(shell $(check_feature sys/sockio.h SIOCGIFCONF)),)
-CFLAGS += -DHAVE_SYS_SOCKIO_H
-endif
-
-# Check for sys/filio.h and FIONREAD
-ifeq ($(shell $(check_feature sys/filio.h FIONREAD)),)
-CFLAGS += -DHAVE_SYS_FILIO_H
-endif
-
-# Check for snprintf
-ifeq ($(shell $(check_feature stdio.h snprintf)),)
-CFLAGS += -DHAVE_SNPRINTF_PROTO
-endif
-
-# Check for getaddrinfo
-ifeq ($(shell $(check_feature netdb.h getaddrinfo)),)
-CFLAGS += -DHAVE_GETADDRINFO_PROTO
-endif
-
-# Check for getnameinfo
-ifeq ($(shell $(check_feature netdb.h getnameinfo)),)
-CFLAGS += -DHAVE_GETNAMEINFO_PROTO
-endif
-
-# Check for gethostname
-ifeq ($(shell $(check_feature unistd.h gethostname)),)
-CFLAGS += -DHAVE_GETHOSTNAME_PROTO
-endif
-
-# Check for hstrerror
-ifeq ($(shell $(check_feature netdb.h hstrerror)),)
-CFLAGS += -DHAVE_HSTRERROR_PROTO
-endif
-
-# Check for if_nametoindex
-ifeq ($(shell $(check_feature net/if.h if_nametoindex)),)
-CFLAGS += -DHAVE_IF_NAMETOINDEX_PROTO
-endif
-
-# Check for inet_pton
-ifeq ($(shell $(check_feature arpa/inet.h inet_pton)),)
-CFLAGS += -DHAVE_INET_PTON_PROTO
-endif
-
-# Check for inet_aton
-ifeq ($(shell $(check_feature arpa/inet.h inet_aton)),)
-CFLAGS += -DHAVE_INET_ATON_PROTO
-endif
-
-# Check for pselect
-ifeq ($(shell $(check_feature signal.h pselect)),)
-CFLAGS += -DHAVE_PSELECT_PROTO
-endif
-
-# Check for sockatmark
-ifeq ($(shell $(check_feature sys/socket.h sockatmark)),)
-CFLAGS += -DHAVE_SOCKATMARK_PROTO
-endif
-
-# Check for multicasting
-ifeq ($(shell $(check_feature sys/socket.h IP_MULTICAST_IF)),) && ifeq ($(shell $(check_feature arpa/inet.h inet_pton)),)
-CFLAGS += -DMCAST
-endif
-
-# Check for INET_ADDRSTRLEN
-ifeq ($(shell $(check_feature arpa/inet.h INET_ADDRSTRLEN)),)
-CFLAGS += -DINET_ADDRSTRLEN
-endif
-
-# Check for SHUT_RD
-ifeq ($(shell $(check_feature sys/socket.h SHUT_RD)),)
-CFLAGS += -DSHUT_RD
-endif
-
-# Check for INADDR_NONE
-ifeq ($(shell $(check_feature netinet/in.h INADDR_NONE)),)
-CFLAGS += -DINADDR_NONE
-endif
-
-# Check for INET6_ADDRSTRLEN
-ifeq ($(shell $(check_feature arpa/inet.h INET6_ADDRSTRLEN)),)
-CFLAGS += -DINET6_ADDRSTRLEN
-endif
-
-# Check for HAVE_BZERO
-ifeq ($(shell $(check_feature string.h bzero)),)
-CFLAGS += -DHAVE_BZERO
-endif
-
-# Check for HAVE_GETHOSTBYNAME2
-ifeq ($(shell $(check_feature netdb.h gethostbyname2)),)
-CFLAGS += -DHAVE_GETHOSTBYNAME2
-endif
-
-# Check for CMSG_LEN
-ifeq ($(shell $(check_feature sys/socket.h CMSG_LEN)),)
-CFLAGS += -DCMSG_LEN
-endif
-
-# Check for CMSG_SPACE
-ifeq ($(shell $(check_feature sys/socket.h CMSG_SPACE)),)
-CFLAGS += -DCMSG_SPACE
-endif
-
-# Check for SUN_LEN
-ifeq ($(shell $(check_feature sys/un.h SUN_LEN)),)
-CFLAGS += -DSUN_LEN
-endif
-
-# Check for AF_LOCAL
-ifeq ($(shell $(check_feature sys/socket.h AF_LOCAL)),)
-CFLAGS += -DAF_LOCAL
-endif
-
-# Check for PF_LOCAL
-ifeq ($(shell $(check_feature sys/socket.h PF_LOCAL)),)
-CFLAGS += -DPF_LOCAL
-endif
-
-# Check for INFTIM
-ifeq ($(shell $(check_feature sys/poll.h INFTIM)),)
-CFLAGS += -DINFTIM
-endif
-
-# Check for HAVE_SOCKADDR_SA_LEN
-ifeq ($(shell $(check_feature sys/socket.h sockaddr_sa_len)),)
-CFLAGS += -DHAVE_SOCKADDR_SA_LEN
-endif
-
-# Check for HAVE_STRUCT_SOCKADDR_STORAGE
-ifeq ($(shell $(check_feature sys/socket.h sockaddr_storage)),)
-CFLAGS += -DHAVE_STRUCT_SOCKADDR_STORAGE
-endif
-
-# Check for HAVE_ADDRINFO_STRUCT
-ifeq ($(shell $(check_feature netdb.h addrinfo)),)
-CFLAGS += -DHAVE_ADDRINFO_STRUCT
-endif
-
-# Check for HAVE_IF_NAMEINDEX_STRUCT
-ifeq ($(shell $(check_feature net/if.h if_nameindex)),)
-CFLAGS += -DHAVE_IF_NAMEINDEX_STRUCT
-endif
-
-# Check for HAVE_TIMESPEC_STRUCT
-ifeq ($(shell $(check_feature time.h timespec)),)
-CFLAGS += -DHAVE_TIMESPEC_STRUCT
-endif
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'sockaddr' && echo "-DHAVE_SYS_SOCKET_H")
+CFLAGS += $(shell echo '#include <netinet/in.h>' | $(CC) -E - 2>/dev/null | grep -q 'sockaddr_in' && echo "-DHAVE_NETINET_IN_H")
+CFLAGS += $(shell echo '#include <poll.h>' | $(CC) -E - 2>/dev/null | grep -q 'pollfd' && echo "-DHAVE_POLL_H")
+CFLAGS += $(shell echo '#include <sys/select.h>' | $(CC) -E - 2>/dev/null | grep -q 'fd_set' && echo "-DHAVE_SYS_SELECT_H")
+CFLAGS += $(shell echo '#include <sys/time.h>' | $(CC) -E - 2>/dev/null | grep -q 'timeval' && echo "-DHAVE_SYSTIME_H")
+CFLAGS += $(shell echo '#include <time.h>' | $(CC) -E - 2>/dev/null | grep -q 'timespec' && echo "-DHAVE_TIME_H")
+CFLAGS += $(shell echo '#include <sys/sysctl.h>' | $(CC) -E - 2>/dev/null | grep -q 'sysctl' && echo "-DHAVE_SYS_SYSCTL_H")
+CFLAGS += $(shell echo '#include <pthread.h>' | $(CC) -E - 2>/dev/null | grep -q 'pthread_create' && echo "-DHAVE_PTHREAD_H")
+CFLAGS += $(shell echo '#include <net/if_dl.h>' | $(CC) -E - 2>/dev/null | grep -q 'if_nameindex' && echo "-DHAVE_NET_IF_DL_H")
+CFLAGS += $(shell echo '#include <sys/event.h>' | $(CC) -E - 2>/dev/null | grep -q 'kevent' && echo "-DHAVE_KQUEUE -DHAVE_SYS_EVENT_H")
+CFLAGS += $(shell echo '#include <strings.h>' | $(CC) -E - 2>/dev/null | grep -q 'bcmp' && echo "-DHAVE_STRINGS_H")
+CFLAGS += $(shell echo '#include <sys/ioctl.h>' | $(CC) -E - 2>/dev/null | grep -q 'ioctl' && echo "-DHAVE_SYS_IOCTL_H")
+CFLAGS += $(shell echo '#include <sys/param.h>' | $(CC) -E - 2>/dev/null | grep -q 'MAXPATHLEN' && echo "-DHAVE_SYS_PARAM_H")
+CFLAGS += $(shell echo '#include <sys/sockio.h>' | $(CC) -E - 2>/dev/null | grep -q 'SIOCGIFCONF' && echo "-DHAVE_SYS_SOCKIO_H")
+CFLAGS += $(shell echo '#include <sys/filio.h>' | $(CC) -E - 2>/dev/null | grep -q 'FIONREAD' && echo "-DHAVE_SYS_FILIO_H")
+CFLAGS += $(shell echo '#include <stdio.h>' | $(CC) -E - 2>/dev/null | grep -q 'snprintf' && echo "-DHAVE_SNPRINTF_PROTO")
+CFLAGS += $(shell echo '#include <netdb.h>' | $(CC) -E - 2>/dev/null | grep -q 'getaddrinfo' && echo "-DHAVE_GETADDRINFO_PROTO")
+CFLAGS += $(shell echo '#include <netdb.h>' | $(CC) -E - 2>/dev/null | grep -q 'getnameinfo' && echo "-DHAVE_GETNAMEINFO_PROTO")
+CFLAGS += $(shell echo '#include <unistd.h>' | $(CC) -E - 2>/dev/null | grep -q 'gethostname' && echo "-DHAVE_GETHOSTNAME_PROTO")
+CFLAGS += $(shell echo '#include <netdb.h>' | $(CC) -E - 2>/dev/null | grep -q 'hstrerror' && echo "-DHAVE_HSTRERROR_PROTO")
+CFLAGS += $(shell echo '#include <net/if.h>' | $(CC) -E - 2>/dev/null | grep -q 'if_nametoindex' && echo "-DHAVE_IF_NAMETOINDEX_PROTO")
+CFLAGS += $(shell echo '#include <arpa/inet.h>' | $(CC) -E - 2>/dev/null | grep -q 'inet_pton' && echo "-DHAVE_INET_PTON_PROTO")
+CFLAGS += $(shell echo '#include <arpa/inet.h>' | $(CC) -E - 2>/dev/null | grep -q 'inet_aton' && echo "-DHAVE_INET_ATON_PROTO")
+CFLAGS += $(shell echo '#include <signal.h>' | $(CC) -E - 2>/dev/null | grep -q 'pselect' && echo "-DHAVE_PSELECT_PROTO")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'sockatmark' && echo "-DHAVE_SOCKATMARK_PROTO")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'IP_MULTICAST_IF' && echo "-DMULTICAST")
+CFLAGS += $(shell echo '#include <arpa/inet.h>' | $(CC) -E - 2>/dev/null | grep -q 'INET_ADDRSTRLEN' && echo "-DINET_ADDRSTRLEN")
+# CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'SHUT_RD' && echo "-DSHUT_RD")
+CFLAGS += $(shell echo '#include <netinet/in.h>' | $(CC) -E - 2>/dev/null | grep -q 'INADDR_NONE' && echo "-DINADDR_NONE")
+CFLAGS += $(shell echo '#include <arpa/inet.h>' | $(CC) -E - 2>/dev/null | grep -q 'INET6_ADDRSTRLEN' && echo "-DINET6_ADDRSTRLEN")
+CFLAGS += $(shell echo '#include <string.h>' | $(CC) -E - 2>/dev/null | grep -q 'bzero' && echo "-DHAVE_BZERO")
+CFLAGS += $(shell echo '#include <netdb.h>' | $(CC) -E - 2>/dev/null | grep -q 'gethostbyname2' && echo "-DHAVE_GETHOSTBYNAME2")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'CMSG_LEN' && echo "-DCMSG_LEN")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'CMSG_SPACE' && echo "-DCMSG_SPACE")
+CFLAGS += $(shell echo '#include <sys/un.h>' | $(CC) -E - 2>/dev/null | grep -q 'SUN_LEN' && echo "-DSUN_LEN")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'AF_LOCAL' && echo "-DAF_LOCAL")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'PF_LOCAL' && echo "-DPF_LOCAL")
+CFLAGS += $(shell echo '#include <sys/poll.h>' | $(CC) -E - 2>/dev/null | grep -q 'INFTIM' && echo "-DINFTIM")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'sockaddr_sa_len' && echo "-DHAVE_SOCKADDR_SA_LEN")
+CFLAGS += $(shell echo '#include <sys/socket.h>' | $(CC) -E - 2>/dev/null | grep -q 'sockaddr_storage' && echo "-DHAVE_STRUCT_SOCKADDR_STORAGE")
+CFLAGS += $(shell echo '#include <netdb.h>' | $(CC) -E - 2>/dev/null | grep -q 'addrinfo' && echo "-DHAVE_ADDRINFO_STRUCT")
+CFLAGS += $(shell echo '#include <net/if.h>' | $(CC) -E - 2>/dev/null | grep -q 'if_nameindex' && echo "-DHAVE_IF_NAMEINDEX_STRUCT")
+CFLAGS += $(shell echo '#include <time.h>' | $(CC) -E - 2>/dev/null | grep -q 'timespec' && echo "-DHAVE_TIMESPEC_STRUCT")
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(HEADER)
-	@$(CC) $(OBJ) $(OPTS) -o $(NAME)
+$(NAME): $(OBJ)
+	@ar rc $(NAME) $(OBJ)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER) $(TEMPLATE)
+$(OBJDIR)/%.o: $(SRC) $(HEADER)
 	@mkdir -p $(dir $@)
-	@$(CC) $(FLAGS) $(OPTS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(OPTS) -c $< -o $@
 
 clean:
-	@$(RM) $(OBJDIR) $(OBJ)
+	@$(RM) $(OBJDIR)
 
 fclean: clean
 	@$(RM) $(NAME)

@@ -1,5 +1,5 @@
 /* include readline */
-#include	"unp.h"
+#include	"../includes/libft.h"
 
 static int	read_cnt;
 static char	*read_ptr;
@@ -28,7 +28,7 @@ again:
 ssize_t
 readline(int fd, void *vptr, size_t maxlen)
 {
-	ssize_t	n, rc;
+	size_t	n, rc;
 	char	c, *ptr;
 
 	ptr = vptr;
