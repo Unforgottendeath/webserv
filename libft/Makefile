@@ -1,50 +1,28 @@
-NAME         = webserv
+NAME=libft
+CC=cc
+CFLAGS=-Wall -Wextra
+RM=rm -f
+SRC = ./srcs/Readline.c ./srcs/Readn.c ./srcs/Writen.c ./srcs/connect_nonb.c ./srcs/connect_timeo.c ./srcs/daemon_inetd.c ./srcs/daemon_init.c ./srcs/dg_cli.c ./srcs/dg_echo.c ./srcs/error.c ./srcs/family_to_level.c ./srcs/gf_time.c ./srcs/host_serv.c ./srcs/hstrerror.c ./srcs/if_indextoname.c ./srcs/if_nameindex.c ./srcs/if_nametoindex.c ./srcs/in6addr_any.c ./srcs/mcast_get_if.c ./srcs/mcast_get_loop.c ./srcs/mcast_get_ttl.c ./srcs/mcast_join.c ./srcs/mcast_leave.c ./srcs/mcast_set_if.c ./srcs/mcast_set_loop.c ./srcs/mcast_set_ttl.c ./srcs/my_addrs.c ./srcs/pselect.c ./srcs/read_fd.c ./srcs/readable_timeo.c ./srcs/rtt.c ./srcs/signal.c ./srcs/signal_intr.c ./srcs/snprintf.c ./srcs/sock_bind_wild.c ./srcs/sock_cmp_addr.c ./srcs/sock_cmp_port.c ./srcs/sock_get_port.c ./srcs/sock_ntop.c ./srcs/sock_ntop_host.c ./srcs/sock_set_addr.c ./srcs/sock_set_port.c ./srcs/sock_set_wild.c ./srcs/sockatmark.c ./srcs/sockfd_to_family.c ./srcs/str_cli.c ./srcs/str_echo.c ./srcs/tcp_connect.c ./srcs/tcp_listen.c ./srcs/tv_sub.c ./srcs/udp_client.c ./srcs/udp_connect.c ./srcs/udp_server.c ./srcs/wraplib.c ./srcs/wrappthread.c ./srcs/wrapsock.c ./srcs/wrapstdio.c ./srcs/wrapunix.c ./srcs/writable_timeo.c ./srcs/write_fd.c 
+		  
 
-CC           = cc
-CFLAGS       = -Wall -Wextra -Werror -O3
-RM           = rm -rf
+OBJ = $(SRC:.c=.o)
 
-CONFIG_H 	 = config.h
-CONFIG_SCRIPT = ./generate_config.sh
 
-OBJDIR       = .objFiles
-
-SRCDIR       = ./srcs
-INCDIR       = ./includes
-
-SRCFILES     = Readline error
-
-HEADERFILES  = libft rtt
-
-SRC          = $(addprefix $(SRCDIR)/, $(SRCFILES:=.c)) test.c
-OBJ          = $(addprefix $(OBJDIR)/, $(SRCFILES:=.o))
-HEADER       = $(addprefix $(INCDIR)/, $(HEADERFILES:=.h))
-
-# Debug
-ifeq ($(DEBUG), 1)
-   OPTS = -g
-else
-   OPTS =
-endif
-
-.PHONY: all clean fclean re
-
-all: $(CONFIG_H) $(NAME)
-
-$(CONFIG_H):
-	@$(CONFIG_SCRIPT)
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) -o $@
 
-$(OBJDIR)/%.o: $(SRC) $(HEADER)
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(OPTS) -c $< -o $@
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@$(RM) $(OBJDIR)
+		@$(RM) $(OBJ) 
 
 fclean: clean
-	@$(RM) $(NAME)
+		@$(RM) $(NAME)
 
 re: fclean all
+
+.PHONY: fclean all re  clean
+

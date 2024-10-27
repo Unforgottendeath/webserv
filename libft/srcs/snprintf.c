@@ -11,6 +11,7 @@
 
 #include	<stdarg.h>		/* ANSI C header file */
 
+# ifndef HAVE_SNPRINTF_PROTO
 int
 snprintf(char *buf, size_t size, const char *fmt, ...)
 {
@@ -25,3 +26,4 @@ snprintf(char *buf, size_t size, const char *fmt, ...)
 		err_quit("snprintf: '%s' overflowed array", fmt);
 	return(n);
 }
+#endif

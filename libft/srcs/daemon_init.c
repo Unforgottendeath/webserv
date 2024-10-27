@@ -1,5 +1,7 @@
 #include	"../includes/libft.h"
 
+#include <syslog.h>
+
 #define	MAXFD	64
 
 extern int	daemon_proc;	/* defined in error.c */

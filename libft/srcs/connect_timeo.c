@@ -27,6 +27,7 @@ connect_timeo(int sockfd, const SA *saptr, socklen_t salen, int nsec)
 static void
 connect_alarm(int signo)
 {
+	(void)signo;
 	return;		/* just interrupt the connect() */
 }
 /* end connect_timeo */

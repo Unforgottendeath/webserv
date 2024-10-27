@@ -8,6 +8,7 @@ int
 sock_cmp_port(const struct sockaddr *sa1, const struct sockaddr *sa2,
 			 socklen_t salen)
 {
+	(void)salen;
 	if (sa1->sa_family != sa2->sa_family)
 		return(-1);
 

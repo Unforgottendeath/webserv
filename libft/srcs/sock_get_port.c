@@ -3,6 +3,7 @@
 int
 sock_get_port(const struct sockaddr *sa, socklen_t salen)
 {
+	(void)salen;
 	switch (sa->sa_family) {
 	case AF_INET: {
 		struct sockaddr_in	*sin = (struct sockaddr_in *) sa;
