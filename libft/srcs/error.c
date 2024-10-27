@@ -1,5 +1,7 @@
 #include	"../includes/libft.h"
 
+#include <stdarg.h>
+#include <syslog.h>
 int		daemon_proc;		/* set nonzero by daemon_init() */
 
 static void	err_doit(int, int, const char *, va_list);
